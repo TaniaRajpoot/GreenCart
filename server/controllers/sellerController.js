@@ -43,7 +43,7 @@ export const sellerLogout = async (req,res)=>{
         res.clearCookie('sellerToken',{
        httpOnly: true, // provide java script to access  cookie 
             secure: process.env.NODE_ENV === 'production', //use secure cookie in production 
-            sameSite:  process.env.NODE_ENV === 'production' ? 'none' : 'strict', //CSRF protection     
+           sameSite:  process.env.NODE_ENV === 'production' ? 'none' : 'strict', //CSRF protection     
         });
 
         return res.json({success:true,message:"Logged Out "})
