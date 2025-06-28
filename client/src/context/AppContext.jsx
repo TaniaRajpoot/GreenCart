@@ -5,6 +5,7 @@ import axios from 'axios';
 // Create the context
 
 axios.defaults.baseURL = import.meta.env.VITE_VITE_BACKEND_URL;
+axios.defaults.withCredentials = true; // ✅ THIS IS MISSING
 
 
 export const AppContext = createContext();

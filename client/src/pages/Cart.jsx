@@ -46,6 +46,8 @@ const Cart = () => {
     try {
       const { data } = await axios.post('/api/address/get', {
         userId: user._id
+      }, {
+        withCredentials: true  // <-- Add this here too for consistency
       })
       if (data.success) {
         setAddresses(data.addresses)
@@ -62,44 +64,51 @@ const Cart = () => {
 
   const placeOrder = async () => {
     try {
-      if(!selectedAddresses){
+      if (!selectedAddresses) {
         return toast.error("Please select an address")
       }
 
-      //place order with cod 
-      if(paymentOption === "COD"){
-        const {data} = await axios.post('/api/order/cod',{
-          userId: user._id,
-          items:cartArray.map(item=>({product: item._id,quantity: item.quantity})),
-          address: selectedAddresses._id
-        
-        })
+      if (paymentOption === "COD") {
+        const { data } = await axios.post(
+          '/api/order/cod',
+          {
+            userId: user._id,
+            items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
+            address: selectedAddresses._id
+          },
+          {
+            withCredentials: true  // <--- Important fix here
+          }
+        )
 
-        if(data.success){
+        if (data.success) {
           toast.success(data.message)
           setCartItems({})
           navigate('/my-orders')
-        }else{
+        } else {
           toast.error(data.message)
         }
-      }else{
-        //place order with stripe 
-           const {data} = await axios.post('/api/order/stripe',{
-          userId: user._id,
-          items:cartArray.map(item=>({product: item._id,quantity: item.quantity})),
-          address: selectedAddresses._id
-        
-        })
+      } else {
+        const { data } = await axios.post(
+          '/api/order/stripe',
+          {
+            userId: user._id,
+            items: cartArray.map(item => ({ product: item._id, quantity: item.quantity })),
+            address: selectedAddresses._id
+          },
+          {
+            withCredentials: true  // <--- And here as well
+          }
+        )
 
-        if(data.success){
+        if (data.success) {
           window.location.replace(data.url)
-        }else{
+        } else {
           toast.error(data.message)
         }
       }
     } catch (error) {
-     toast.error(error.message)
-
+      toast.error(error.message)
     }
   }
 
@@ -182,7 +191,7 @@ const Cart = () => {
             </div>
             <p className="text-center">
               {currency}
-              {product.offerPrice * product.quantity}
+              {product.price * product.quantity}
             </p>
             <button
               onClick={() => removeFromCart(product._id)}
@@ -221,9 +230,7 @@ const Cart = () => {
         <div className="mb-6">
           <p className="text-sm font-medium uppercase">Delivery Address</p>
           <div className="relative flex justify-between items-start mt-2">
-            <p className="text-gray-500">
-              {formatAddress(selectedAddresses)}
-            </p>
+            <p className="text-gray-500">{formatAddress(selectedAddresses)}</p>
             <button
               onClick={() => setShowAddress(!showAddress)}
               className="text-primary hover:underline cursor-pointer"

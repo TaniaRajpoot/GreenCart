@@ -1,43 +1,58 @@
-import cookieParser from 'cookie-parser';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import connectedDB from './configs/db.js';
-import 'dotenv/config'
+import connectCloudinary from './configs/cloudinary.js';
+
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
-import connectCloudinary from './configs/cloudinary.js';
 import productRouter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import { stripeWebHooks } from './controllers/orderController.js';
 
+dotenv.config();
 
 const app = express();
-const port = process.env.port || 4000;
-await connectedDB()
-await connectCloudinary()
+const port = process.env.PORT || 4000;
 
-//Allow multiple origins
-const allowedOrigins = ['http://localhost:5173','https://green-cart-4zxf.vercel.app','https://green-cart-weld.vercel.app']
+// Connect to DB and Cloudinary
+await connectedDB();
+await connectCloudinary();
 
-app.post('/stripe', express.raw({type:'application/json'}) ,stripeWebHooks)
+// CORS config for frontend origins
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://green-cart-4zxf.vercel.app',
+  'https://green-cart-weld.vercel.app',
+];
 
-//Middleware configuration
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({origin: allowedOrigins, credentials:true}));
+// Stripe webhook (raw body) – must come BEFORE express.json()
+app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebHooks);
 
+// Middleware (applies to all routes except /stripe)
+app.use(express.json()); // Parse JSON bodies
+app.use(cookieParser()); // Parse cookies
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // Allow cookies to be sent
+  })
+);
 
-app.get("/", (req,res)=> res.send("API is working"));
-app.use('/api/user', userRouter)
-app.use('/api/seller', sellerRouter)
-app.use('/api/product', productRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/address', addressRouter)
-app.use('/api/order', orderRouter)
+// Routes
+app.get("/", (req, res) => res.send("API is working ✅"));
 
+app.use('/api/user', userRouter);
+app.use('/api/seller', sellerRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
+app.use('/api/order', orderRouter);
 
-app.listen(port, ()=>{
-    console.log(`Server is running on http://localhost:${port}`)
-})
+// Start server
+app.listen(port, () => {
+  console.log(`🚀 Server running at http://localhost:${port}`);
+});

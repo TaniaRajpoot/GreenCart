@@ -3,6 +3,7 @@ import Address from "../models/address.js"
 //Add Address : /api/address/add
 export const addAddress = async (req, res) => {
   try {
+    console.log("Received Address Body:", req.body);  // <-- Put it here
     await Address.create(req.body);  // req.body already contains all fields directly
     res.json({ success: true, message: "Address added successfully" });
   } catch (error) {
