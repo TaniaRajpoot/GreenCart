@@ -25,8 +25,7 @@ await connectCloudinary();
 // CORS config for frontend origins
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://green-cart-4zxf.vercel.app',
-  'https://green-cart-weld.vercel.app',
+  'https://green-cart-frontend-eta.vercel.app'
 ];
 
 // Stripe webhook (raw body) – must come BEFORE express.json()
@@ -43,7 +42,7 @@ app.use(
 );
 
 // Routes
-app.get("/", (req, res) => res.send("API is working ✅"));
+app.get("/", (req, res) => res.send("API is working "));
 
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
