@@ -16,7 +16,9 @@ const Login = () => {
         event.preventDefault();
         const {data} = await axios.post(`/api/user/${state}`,{
             name,email,password
-        });
+        },
+        { withCredentials: true }
+    );
         if(data.success){
             navigate('/')
             setUser(data.user)

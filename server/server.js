@@ -34,12 +34,17 @@ app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebHooks);
 // Middleware (applies to all routes except /stripe)
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true, // Allow cookies to be sent
-  })
-);
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // allow request
+    } else {
+      callback(new Error('Not allowed by CORS')); // block others
+    }
+  },
+  credentials: true
+}));
+
 
 // Routes
 app.get("/", (req, res) => res.send("API is working "));
