@@ -64,6 +64,7 @@ const Cart = () => {
 
   const placeOrder = async () => {
     try {
+      console.log(user);
       if (!selectedAddresses) {
         return toast.error("Please select an address")
       }

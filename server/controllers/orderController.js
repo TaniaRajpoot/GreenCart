@@ -7,6 +7,7 @@ import User from "../models/User.js";
 export const placeOrderCOD = async (req, res) => {
   try {
     const { userId, items, address } = req.body;
+    console.log(req.body);
 
     if (!address || !items || items.length === 0) {
       return res.json({ success: false, message: 'Invalid Data' });
