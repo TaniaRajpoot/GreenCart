@@ -5,7 +5,7 @@ import axios from 'axios';
 // Create the context
 
 axios.defaults.baseURL = import.meta.env.VITE_VITE_BACKEND_URL;
-axios.defaults.withCredentials = true; // ✅ THIS IS MISSING
+axios.defaults.withCredentials = true; 
 
 
 export const AppContext = createContext();
@@ -28,8 +28,9 @@ export const AppContextProvider = ({ children }) => {
   //fetch  User Auth Status , User data and cart items 
   const fetchUser  = async()=>{
     try {
-      const {data} = await axios.get('/api/user/is-auth');
-
+      const { data } = await axios.get('/api/user/is-auth', {
+  withCredentials: true  // ✅ required to read cookie
+});
       if(data.success){
         setUser(data.user)
         setCartItems(data.user.cartItems)

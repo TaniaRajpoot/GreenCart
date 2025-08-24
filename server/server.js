@@ -35,13 +35,7 @@ app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebHooks);
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // allow request
-    } else {
-      callback(new Error('Not allowed by CORS')); // block others
-    }
-  },
+  origin: allowedOrigins,
   credentials: true
 }));
 
