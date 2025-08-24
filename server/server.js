@@ -25,7 +25,7 @@ await connectCloudinary();
 // CORS config for frontend origins
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://green-cart-frontend-eta.vercel.app",
+  "https://greencart-ashen-alpha.vercel.app",
   process.env.FRONTEND_URL, // Add this for flexibility
 ].filter(Boolean); // Remove undefined values
 
