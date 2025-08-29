@@ -4,8 +4,8 @@ import React from "react";
 const Contact = () => {
 
 
-const handleSubmit = (e) => {
-  e.preventDefault(); // Prevent page reload
+const handleSubmit = () => {
+ 
   toast.success("Message sent successfully!");
 };
 
@@ -50,10 +50,10 @@ const handleSubmit = (e) => {
               <strong>Email:</strong> support@greencart.com
             </p>
             <p className="mb-2 text-gray-600">
-              <strong>Phone:</strong> +92 300 1234567
+              <strong>Phone:</strong>  +44 20 7946 0958
             </p>
             <p className="mb-4 text-gray-600">
-              <strong>Address:</strong> GreenCart HQ, Lahore, Pakistan
+              <strong>Address:</strong> 221B Baker Street London NW1 6XE United Kingdom
             </p>
           </div>
           <iframe
