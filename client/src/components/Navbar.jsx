@@ -61,9 +61,7 @@ const Navbar = () => {
                         <button onClick={()=> setShowUserLogin(true)} className="cursor-pointer px-6 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
                             Login
                         </button>
-                        <button onClick={()=> navigate('/seller')} className="cursor-pointer px-6 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
-                            Seller
-                        </button>
+                        
                     </div>
                 )
                 :(
@@ -111,12 +109,7 @@ const Navbar = () => {
                         }} className="cursor-pointer px-6 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
                         Login
                         </button>
-                        <button onClick={()=>{
-                            setOpen(false);
-                            navigate('/seller');
-                        }} className="cursor-pointer px-6 py-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm">
-                        Seller
-                        </button>
+                       
                     </div>
                 ): (
                 <button onClick={logout} className="cursor-pointer px-6 py-2 mt-2 bg-primary hover:bg-primary-dull transition text-white rounded-full text-sm"> 
