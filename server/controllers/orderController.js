@@ -10,14 +10,15 @@ export const placeOrderCOD = async (req, res) => {
     console.log(req.body);
 
     if (!address || !items || items.length === 0) {
-      return res.json({ success: false, message: 'Invalid Data' });
+      return res.json({ success: false, message: "Invalid Data" });
     }
 
     // Calculate total amount correctly with async reduce
     let amount = 0;
     for (const item of items) {
       const product = await Product.findById(item.product);
-      if (!product) return res.json({ success: false, message: 'Invalid Product' });
+      if (!product)
+        return res.json({ success: false, message: "Invalid Product" });
       amount += product.price * item.quantity;
     }
 
@@ -31,7 +32,7 @@ export const placeOrderCOD = async (req, res) => {
       paymentType: "COD",
     });
 
-    res.json({ success: true, message: 'Order Placed Successfully' });
+    res.json({ success: true, message: "Order Placed Successfully" });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -44,14 +45,15 @@ export const placeOrderStripe = async (req, res) => {
     const { origin } = req.headers;
 
     if (!address || !items || items.length === 0) {
-      return res.json({ success: false, message: 'Invalid Data' });
+      return res.json({ success: false, message: "Invalid Data" });
     }
 
     const productData = [];
     let amount = 0;
     for (const item of items) {
       const product = await Product.findById(item.product);
-      if (!product) return res.json({ success: false, message: 'Invalid Product' });
+      if (!product)
+        return res.json({ success: false, message: "Invalid Product" });
       productData.push({
         name: product.name,
         price: product.price,
@@ -62,14 +64,12 @@ export const placeOrderStripe = async (req, res) => {
 
     amount += Math.floor(amount * 0.02); // 2% tax
 
-    // Create order with paymentType "Online", but isPaid: false by default
     const order = await Order.create({
       userId,
       items,
       amount,
       address,
       paymentType: "Online",
-      isPaid: false,
     });
 
     const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
@@ -124,9 +124,10 @@ export const stripeWebHooks = async (req, res) => {
         const session = event.data.object;
         const { orderId, userId } = session.metadata;
 
-        console.log(`Stripe Checkout completed for orderId: ${orderId}, userId: ${userId}`);
+        console.log(
+          `Stripe Checkout completed for orderId: ${orderId}, userId: ${userId}`
+        );
 
-        await Order.findByIdAndUpdate(orderId, { isPaid: true });
         await User.findByIdAndUpdate(userId, { cartItem: {} });
 
         console.log("Order marked as paid and user cart cleared");
@@ -159,7 +160,6 @@ export const getUserOrders = async (req, res) => {
     const userId = req.userId;
     const orders = await Order.find({
       userId,
-      $or: [{ paymentType: "COD" }, { isPaid: true }],
     })
       .populate("items.product address")
       .sort({ createdAt: -1 });
@@ -173,9 +173,7 @@ export const getUserOrders = async (req, res) => {
 // Get all orders (admin/seller): /api/order/seller
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({
-      $or: [{ paymentType: "COD" }, { isPaid: true }],
-    })
+    const orders = await Order.find({})
       .populate("items.product address")
       .sort({ createdAt: -1 });
 
